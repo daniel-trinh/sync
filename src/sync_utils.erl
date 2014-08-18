@@ -30,7 +30,7 @@ get_src_dir_from_module(Module)->
 
                 %% Ensure that the file exists, is a decendent of the tree, and
                 %% how to deal with that
-                
+
                 IsFile = filelib:is_regular(Source),
                 IsDecendant = is_path_decendent(Source),
                 NonDecendants = get_env(non_descendants, fix),
@@ -83,7 +83,7 @@ get_options_from_module(Module) ->
                 {ok, IncludeDir2} = determine_include_dir(IncludeDir1, BeamDir, SrcDir),
                 %% check if the module is a DTL template.
                 IsDtl = is_erlydtl_template(Module),
-                    
+
                 Options3 = [{i, IncludeDir2}, {dtl, IsDtl} | proplists:delete(i, Options2)],
                 {ok, Options3}
             catch _ : _ ->
@@ -147,13 +147,13 @@ find_include_dir_from_ancestors(Cwd, IncludeBase, Dir) ->
         false ->
             find_include_dir_from_ancestors(Cwd, IncludeBase, filename:dirname(Dir))
     end.
-    
+
 normalize_case_windows_dir(Dir) ->
     case os:type() of
         {win32,_} -> string:to_lower(Dir);
         {unix,_} -> Dir
     end.
-    
+
 
 %% @private This is an attempt to intelligently fix paths in modules when a
 %% release is moved.  Essentially, it takes a module name and its original path
@@ -198,6 +198,8 @@ get_src_dir(Dir) ->
     HasCode =
         filelib:wildcard("*.erl", Dir) /= [] orelse
         filelib:wildcard("*.dtl", Dir) /= [] orelse
+        filelib:wildcard("*.ex", Dir) /= [] orelse
+        filelib:wildcard("*.exs", Dir) /= [] orelse
         filelib:wildcard("*.hrl", Dir) /= [],
     if
         HasCode -> {ok,Dir};
