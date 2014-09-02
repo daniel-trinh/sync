@@ -175,7 +175,8 @@ handle_cast(discover_src_files, State) ->
     end,
 
     Y = fun(X, Acc) ->
-        sync_utils:wildcard(X, ".*\\.ex$") ++ Acc
+        sync_utils:wildcard(X, ".*\\.ex$") ++
+        sync_utils:wildcard(X, ".*\\.exs$") ++ Acc
     end,
 
     ErlFiles = lists:usort(lists:foldl(F, [], State#state.src_dirs)),
