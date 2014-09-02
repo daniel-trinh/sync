@@ -198,6 +198,8 @@ get_src_dir(Dir) ->
     HasCode =
         filelib:wildcard("*.erl", Dir) /= [] orelse
         filelib:wildcard("*.dtl", Dir) /= [] orelse
+        filelib:wildcard("*.ex", Dir) /= [] orelse
+        filelib:wildcard("*.exs", Dir) /= [] orelse
         filelib:wildcard("*.hrl", Dir) /= [],
     if
         HasCode -> {ok,Dir};

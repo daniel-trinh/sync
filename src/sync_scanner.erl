@@ -164,19 +164,28 @@ handle_cast(discover_src_dirs, State) ->
 
     %% Return with updated dirs...
     NewState = State#state { src_dirs=USortedSrcDirs, hrl_dirs=USortedHrlDirs, timers=NewTimers },
+
     {noreply, NewState};
 
 handle_cast(discover_src_files, State) ->
     %% For each source dir, get a list of source files...
     F = fun(X, Acc) ->
-        sync_utils:wildcard(X, ".*\.erl$") ++ sync_utils:wildcard(X, ".*\.dtl$") ++ Acc
+        sync_utils:wildcard(X, ".*\\.erl$") ++
+        sync_utils:wildcard(X, ".*\\.dtl$") ++ Acc
     end,
+
+    Y = fun(X, Acc) ->
+        sync_utils:wildcard(X, ".*\\.ex$") ++ Acc
+    end,
+
     ErlFiles = lists:usort(lists:foldl(F, [], State#state.src_dirs)),
 
+    ExFiles = lists:usort(lists:foldl(Y, [], State#state.src_dirs)),
     %% For each include dir, get a list of hrl files...
     Fhrl = fun(X, Acc) ->
-        sync_utils:wildcard(X, ".*\.hrl$") ++ Acc
+        sync_utils:wildcard(X, ".*\\.hrl$") ++ Acc
     end,
+
     HrlFiles = lists:usort(lists:foldl(Fhrl, [], State#state.hrl_dirs)),
 
     %% Schedule the next interval...
